@@ -63,7 +63,7 @@ public class Player : MonoBehaviour
         climbingLadder = state;
         rb.gravityScale = state ? 0 : 1;
         rb.velocity = state ? new Vector2(0,rb.velocity.y) : new Vector2(rb.velocity.x,0);
-        gameObject.layer = state ? 8 : 0;
+        gameObject.layer = state ? 8 : 10;
         if (state) rb.MovePosition(new Vector2(ladderDetector.ladderCollider.transform.position.x, transform.position.y));
     }
 
@@ -75,5 +75,10 @@ public class Player : MonoBehaviour
     public bool IsInsideLadder()
     {
         return ladderDetector.insideLadder;
+    }
+
+    public void Death()
+    {
+        Debug.Log("Player DEAD!");
     }
 }

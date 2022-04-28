@@ -3,6 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ProjectileType
+{
+    Arrow,
+    Plug,
+    Shot
+}
+
 public class Projectile : MonoBehaviour
 {
     public float projectileSpeed;
@@ -17,6 +24,11 @@ public class Projectile : MonoBehaviour
     {
         Vector2 moveDir = new Vector2(0, projectileSpeed);
         rb.velocity = moveDir;
+    }
+
+    public void Death()
+    {
+        gameObject.SetActive(false);
     }
 
     void OnCollisionEnter2D(Collision2D other)
