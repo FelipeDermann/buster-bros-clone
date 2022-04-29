@@ -142,14 +142,5 @@ public class BubblePool : MonoBehaviour
                 
         }, true, bubblesToAdd.tier5Bubbles);
         
-        Debug.Log(tier2BubblePool.CountAll);
-        Debug.Log(tier3BubblePool.CountAll);
-        Debug.Log(tier4BubblePool.CountAll);
-        Debug.Log(tier5BubblePool.CountAll);
-    }
-
-    void Pool()
-    {
-        
     }
 }

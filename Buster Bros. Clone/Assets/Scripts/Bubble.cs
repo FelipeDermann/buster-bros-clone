@@ -3,26 +3,41 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum Direction
+{
+    Right,
+    Left,
+    None
+}
+
 public class Bubble : MonoBehaviour
 {
     private Rigidbody2D rb;
     public float horSpeed;
     public float bounceForce;
-    public float direction;
+    public Direction direction;
     public int tier;
+
+    private Collider2D myCollider;
     
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        myCollider = GetComponent<Collider2D>();
+        
+        ChangeDirection(direction);
     }
 
     private void FixedUpdate()
     {
-        Vector3 horDir = new Vector3(horSpeed * direction, rb.velocity.y);
+        float floatDir = direction == Direction.Right ? 1 : -1;
+        if (direction == Direction.None) floatDir = 0;
+        
+        Vector3 horDir = new Vector3(horSpeed * floatDir, rb.velocity.y);
         rb.velocity = horDir;
     }
 
-    void Death()
+    public void Death()
     {
         Bubble bubble1 = null;
         Bubble bubble2 = null;
@@ -51,36 +66,50 @@ public class Bubble : MonoBehaviour
         }
         
         bubble1.transform.position = transform.position;
-        bubble1.ChangeDirection(-1);
+        bubble1.ChangeDirection(Direction.Left);
         bubble1.rb.AddForce(Vector2.up * bounceForce/2, ForceMode2D.Impulse);
         
         bubble2.transform.position = transform.position;
-        bubble2.ChangeDirection(1);
+        bubble2.ChangeDirection(Direction.Right);
         bubble2.rb.AddForce(Vector2.up * bounceForce/2, ForceMode2D.Impulse);
 
         gameObject.SetActive(false);
     }
 
-    void ChangeDirection(float newDirection)
+    void ChangeDirection(Direction newDirection)
     {
         direction = newDirection;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D other)
     {
-        Vector2 bounceDir = collision.GetContact(0).normal;
-        Debug.Log("CONTACT COUNT: " + collision.contactCount);
-        if (bounceDir.x >= 1 || bounceDir.x <= -1) ChangeDirection(Mathf.Sign(bounceDir.x));
+        Physics2D.IgnoreCollision(myCollider, other.collider, true);
 
-        if (bounceDir.y >= 0.5f || bounceDir.y <= -0.5f)
+        for (int i = 0; i < other.contactCount; i++)
         {
-            bounceDir.x = 0;
-            rb.velocity = Vector2.zero;
-            Vector2 forceToApply = bounceDir * bounceForce;
-            
-            if (bounceDir.y < 0) forceToApply /= 2;
-            rb.AddForce(forceToApply, ForceMode2D.Impulse);
+            Vector2 bounceDir = other.GetContact(i).normal;
+            if (bounceDir.x >= 1 || bounceDir.x <= -1)
+            {
+                float dirValue = Mathf.Sign(bounceDir.x);
+                Direction dir = dirValue >= 1 ? Direction.Right : Direction.Left;
+                ChangeDirection(dir);
+            }
+
+            if (bounceDir.y >= 0.5f || bounceDir.y <= -0.5f)
+            {
+                bounceDir.x = 0;
+                rb.velocity = Vector2.zero;
+                Vector2 forceToApply = bounceDir * bounceForce;
+
+                if (bounceDir.y < 0) forceToApply /= 2;
+                rb.AddForce(forceToApply, ForceMode2D.Impulse);
+            }
         }
+    }
+
+    private void OnCollisionExit2D(Collision2D other)
+    {
+        Physics2D.IgnoreCollision(myCollider, other.collider, false);
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -88,12 +117,6 @@ public class Bubble : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             other.GetComponent<Player>().Death();
-        }
-        
-        if (other.CompareTag("Projectile"))
-        {
-            other.GetComponent<Projectile>().Death();
-            Death();
         }
     }
 }

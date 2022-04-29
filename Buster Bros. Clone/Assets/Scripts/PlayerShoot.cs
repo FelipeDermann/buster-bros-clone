@@ -4,14 +4,19 @@ using UnityEngine;
 
 public class PlayerShoot : MonoBehaviour
 {
-    public GameObject shotPrefab;
-    public Transform shotOriginPos;
-    
+    [SerializeField] private GameObject shotPrefab;
+    [SerializeField] private WeaponType currentWeaponType;
+    [SerializeField] private Transform shotOriginPos;
+
+    public WeaponType CurrentWeaponType { get{ return currentWeaponType; }}
+
     public void Shoot()
     {
-        GameObject bulletPrefab = Instantiate(shotPrefab, shotOriginPos.position, transform.rotation, null);
-        Projectile bullet = bulletPrefab.GetComponent<Projectile>();
-        bullet.Initiate();
-        Physics2D.IgnoreCollision(bullet.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+        WeaponManager.Instance.SpawnShot(shotOriginPos, currentWeaponType);
+    }
+
+    public void ChangeWeaponType(WeaponType newWeapon)
+    {
+        currentWeaponType = newWeapon;
     }
 }

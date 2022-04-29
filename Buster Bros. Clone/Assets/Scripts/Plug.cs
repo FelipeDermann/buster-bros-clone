@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GatlingShot : Projectile
+public class Plug : Projectile
 {
     public override void Death()
     {
@@ -10,6 +10,6 @@ public class GatlingShot : Projectile
         
         rb.velocity = Vector2.zero;
         WeaponManager.Instance.ReturnShot(this);
-        Debug.Log("BULLET DEAD");
+        Debug.Log("DESTROY ALL HIT BOXES");
     }
 }
