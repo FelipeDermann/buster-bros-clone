@@ -11,11 +11,17 @@ public struct BubblePoolAmount
     public int tier3Bubbles;
     public int tier4Bubbles;
     public int tier5Bubbles;
+
+    public int TotalBubbles()
+    {
+        int total = tier1Bubbles + tier2Bubbles + tier3Bubbles + tier4Bubbles + tier5Bubbles;
+        return total;
+    }
 }
 
-public class BubblePool : MonoBehaviour
+public class BubbleManager : MonoBehaviour
 {
-    public static BubblePool Instance { get; private set; }
+    public static BubbleManager Instance { get; private set; }
     
     public ObjectPool<Bubble> tier1BubblePool;
     public ObjectPool<Bubble> tier2BubblePool;
@@ -29,6 +35,8 @@ public class BubblePool : MonoBehaviour
     [SerializeField] private Bubble _tier4BubblePrefab;
     [SerializeField] private Bubble _tier5BubblePrefab;
 
+    [SerializeField] private int _totalBubbles;
+    
     private void Awake()
     {
         if (Instance == null)
@@ -47,6 +55,7 @@ public class BubblePool : MonoBehaviour
             switch (bubble.tier)
             {
                 case 1:
+                    bubbleAmount.tier1Bubbles += 1;
                     bubbleAmount.tier2Bubbles += 2;
                     bubbleAmount.tier3Bubbles += 4;
                     bubbleAmount.tier4Bubbles += 8;
@@ -69,8 +78,15 @@ public class BubblePool : MonoBehaviour
                     break;
             }
         }
-        
+
+        _totalBubbles = bubbleAmount.TotalBubbles();
         CreatePool(bubbleAmount);
+    }
+
+    public void DecreaseBubble()
+    {
+        _totalBubbles -= 1;
+        if (_totalBubbles <= 0) Debug.Log("ALL BUBBLES POPPED!");
     }
 
     public void CreatePool(BubblePoolAmount bubblesToAdd)

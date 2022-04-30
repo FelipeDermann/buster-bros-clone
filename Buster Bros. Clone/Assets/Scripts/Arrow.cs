@@ -5,7 +5,7 @@ using UnityEngine;
 public class Arrow : Projectile
 {
     [SerializeField] private float _hitboxGrowRate;
-    private Coroutine _spawnerCoroutine;
+    private Coroutine _hitboxExpandCoroutine;
     [SerializeField] private GameObject wireHitbox;
 
     public override void Awake()
@@ -26,7 +26,7 @@ public class Arrow : Projectile
         wireHitbox.transform.SetParent(null);
         wireHitbox.SetActive(true);
         
-        _spawnerCoroutine = StartCoroutine(ExpandHitbox());
+        _hitboxExpandCoroutine = StartCoroutine(ExpandHitbox());
     }
 
     IEnumerator ExpandHitbox()
@@ -42,13 +42,15 @@ public class Arrow : Projectile
     public override void Death()
     {
         if (!gameObject.activeSelf) return;
+        base.Death();
         
         rb.velocity = Vector2.zero;
         WeaponManager.Instance.ReturnShot(this);
         Debug.Log("DESTROY ARROW");
 
-        StopCoroutine(_spawnerCoroutine);
+        if(_hitboxExpandCoroutine != null) StopCoroutine(_hitboxExpandCoroutine);
         wireHitbox.SetActive(false);
+        wireHitbox.transform.SetParent(transform);
         wireHitbox.transform.localScale = new Vector3(1, 1, 1);
     }
 }

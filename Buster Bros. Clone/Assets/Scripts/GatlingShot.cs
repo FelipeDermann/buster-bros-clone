@@ -7,9 +7,8 @@ public class GatlingShot : Projectile
     public override void Death()
     {
         if (!gameObject.activeSelf) return;
-        
+
         rb.velocity = Vector2.zero;
         WeaponManager.Instance.ReturnShot(this);
-        Debug.Log("BULLET DEAD");
     }
 }

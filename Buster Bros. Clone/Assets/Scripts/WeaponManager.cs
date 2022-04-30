@@ -101,23 +101,59 @@ public class WeaponManager : MonoBehaviour
 
     public void SpawnShot(Transform projectileOriginPos, WeaponType weaponType)
     {
-        Projectile newProjectile = null;
-
         switch (weaponType)
         {
             case WeaponType.Arrow:
-                newProjectile = arrowPool.Get();
+                ArrowShot(projectileOriginPos);
                 break;
             case WeaponType.Shot:
-                newProjectile = shotPool.Get();
+                GatlingShot(projectileOriginPos);
                 break;
             case WeaponType.Plug:
-                newProjectile = plugPool.Get();
+                PlugShot(projectileOriginPos);
                 break;
         }
-        
+    }
+
+    void ArrowShot(Transform projectileOriginPos)
+    {
+        Projectile newProjectile = arrowPool.Get();
         newProjectile.transform.position = projectileOriginPos.position;
         newProjectile.Initiate();
+    }
+    
+    void PlugShot(Transform projectileOriginPos)
+    {
+        Projectile newProjectile = plugPool.Get();
+        newProjectile.transform.position = projectileOriginPos.position;
+        newProjectile.Initiate();
+    }
+
+    void GatlingShot(Transform projectileOriginPos)
+    {
+        Vector3 closeSpawnPos = projectileOriginPos.position + new Vector3(0.35f,0,0);
+        for (int i = 0; i < 2; i++)
+        {
+            Projectile newProjectile = shotPool.Get();
+            
+            newProjectile.transform.position = closeSpawnPos;
+            newProjectile.Initiate();
+            
+            closeSpawnPos = projectileOriginPos.position - new Vector3(0.35f,0,0);
+        }
+        
+        Vector3 farSpawnPos = projectileOriginPos.position + new Vector3(1,0,0);
+        for (int i = 0; i < 2; i++)
+        {
+            Projectile newProjectile = shotPool.Get();
+            float horSpeed = newProjectile.ProjectileSpeed * 0.1f;
+            float finalHorSpeed = i == 0 ? horSpeed: -horSpeed;
+            
+            newProjectile.transform.position = farSpawnPos;
+            newProjectile.Initiate(finalHorSpeed);
+            
+            farSpawnPos = projectileOriginPos.position - new Vector3(1,0,0);
+        }
     }
 
     public void ReturnShot(Projectile projectileToReturn)

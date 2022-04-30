@@ -136,6 +136,7 @@ GameObject:
   - component: {fileID: 71768924}
   - component: {fileID: 71768927}
   - component: {fileID: 71768928}
+  - component: {fileID: 71768929}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -167,7 +168,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1.7}
+  m_Size: {x: 0.8, y: 1.7}
   m_EdgeRadius: 0
 --- !u!4 &71768925
 Transform:
@@ -184,6 +185,7 @@ Transform:
   - {fileID: 726563029}
   - {fileID: 785358620}
   - {fileID: 1412248924}
+  - {fileID: 798771606}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -220,11 +222,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0394acca18f05b42ad0fa794c2f3404, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 40
-  moveDir: {x: 0, y: 0}
-  climbingLadder: 0
+  deathDelay: 5
   playerShoot: {fileID: 71768928}
-  ladderDetector: {fileID: 1412248925}
+  playerMovement: {fileID: 71768929}
+  collider: {fileID: 71768924}
+  trigger: {fileID: 798771607}
 --- !u!114 &71768928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -237,9 +239,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a8cb07cb4f5e044a86ed4e777df085f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shotPrefab: {fileID: 6076436144757674869, guid: 95c32f2480d3b794dac193150191ff88, type: 3}
-  currentWeaponType: 0
+  currentWeaponType: 2
   shotOriginPos: {fileID: 785358620}
+  canShoot: 1
+--- !u!114 &71768929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 71768923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29052d590411e724f8883cb661745d9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 40
+  moveDir: {x: 0, y: 0}
+  climbingLadder: 0
+  ladderDetector: {fileID: 1412248925}
 --- !u!1001 &334990264
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -465,6 +483,64 @@ Transform:
   m_Father: {fileID: 71768925}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &798771605
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 798771606}
+  - component: {fileID: 798771607}
+  m_Layer: 0
+  m_Name: Trigger
+  m_TagString: Player
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &798771606
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 798771605}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 71768925}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &798771607
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 798771605}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 6200000, guid: e18023a75e81820478d82910e5cbb30b, type: 2}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.8, y: 1.7}
+  m_EdgeRadius: 0
 --- !u!1 &1176585917
 GameObject:
   m_ObjectHideFlags: 0
@@ -537,7 +613,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 20
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

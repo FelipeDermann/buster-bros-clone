@@ -39,26 +39,30 @@ public class Bubble : MonoBehaviour
 
     public void Death()
     {
+        if (!gameObject.activeSelf) return;
+        
+        BubbleManager.Instance.DecreaseBubble();
+
         Bubble bubble1 = null;
         Bubble bubble2 = null;
         
         switch (tier)
         {
             case 1:  
-                bubble1 = BubblePool.Instance.tier2BubblePool.Get();
-                bubble2 = BubblePool.Instance.tier2BubblePool.Get();
+                bubble1 = BubbleManager.Instance.tier2BubblePool.Get();
+                bubble2 = BubbleManager.Instance.tier2BubblePool.Get();
                 break;
             case 2:  
-                bubble1 = BubblePool.Instance.tier3BubblePool.Get();
-                bubble2 = BubblePool.Instance.tier3BubblePool.Get();
+                bubble1 = BubbleManager.Instance.tier3BubblePool.Get();
+                bubble2 = BubbleManager.Instance.tier3BubblePool.Get();
                 break;
             case 3:  
-                bubble1 = BubblePool.Instance.tier4BubblePool.Get();
-                bubble2 = BubblePool.Instance.tier4BubblePool.Get();
+                bubble1 = BubbleManager.Instance.tier4BubblePool.Get();
+                bubble2 = BubbleManager.Instance.tier4BubblePool.Get();
                 break;
             case 4:  
-                bubble1 = BubblePool.Instance.tier5BubblePool.Get();
-                bubble2 = BubblePool.Instance.tier5BubblePool.Get();
+                bubble1 = BubbleManager.Instance.tier5BubblePool.Get();
+                bubble2 = BubbleManager.Instance.tier5BubblePool.Get();
                 break;
             case 5:
                 gameObject.SetActive(false);
@@ -110,13 +114,5 @@ public class Bubble : MonoBehaviour
     private void OnCollisionExit2D(Collision2D other)
     {
         Physics2D.IgnoreCollision(myCollider, other.collider, false);
-    }
-
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            other.GetComponent<Player>().Death();
-        }
     }
 }
