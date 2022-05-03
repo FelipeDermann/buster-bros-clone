@@ -86,19 +86,11 @@ public class BubbleManager : MonoBehaviour
     public void DecreaseBubble()
     {
         _totalBubbles -= 1;
-        if (_totalBubbles <= 0) Debug.Log("ALL BUBBLES POPPED!");
+        if (_totalBubbles <= 0) GameManager.Instance.LevelCleared();
     }
 
     public void CreatePool(BubblePoolAmount bubblesToAdd)
     {
-        Debug.Log(
-            "Tier 1 " + bubblesToAdd.tier1Bubbles +  
-                  " Tier 2 " + bubblesToAdd.tier2Bubbles +
-                  " Tier3 " + bubblesToAdd.tier3Bubbles +
-                  " Tier 4 " + bubblesToAdd.tier4Bubbles +
-                  " Tier 5 " + bubblesToAdd.tier5Bubbles
-            );
-        
         tier2BubblePool = new ObjectPool<Bubble>(() =>
         {
             return Instantiate(_tier2BubblePrefab, transform, true);

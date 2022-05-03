@@ -6,8 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
-    public float deathDelay;
-    
     InputMap_Main _inputMap;
     [Header("References")]
     [SerializeField] private PlayerShoot playerShoot;
@@ -24,6 +22,12 @@ public class Player : MonoBehaviour
         _inputMap.Player.Fire.performed += ctx => Shoot();
         
         playerMovement.Initiate(_inputMap);
+        GameManager.LevelOver += DisableInputs;
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.LevelOver -= DisableInputs;
     }
 
     void Shoot()
@@ -33,20 +37,17 @@ public class Player : MonoBehaviour
 
     public void Death()
     {
-        Debug.Log("Player DEAD!");
-        
         collider.enabled = false;
         trigger.enabled = false;
-        
-        _inputMap.Disable();
+
+        DisableInputs();
         playerMovement.DeathAnim();
-        StartCoroutine(RestartSceneAfterDelay());
+        GameManager.Instance.PlayerDefeat();
     }
-    
-    IEnumerator RestartSceneAfterDelay()
+
+    void DisableInputs()
     {
-        yield return new WaitForSeconds(deathDelay);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        _inputMap.Disable();
     }
     
     void OnTriggerEnter2D(Collider2D other)

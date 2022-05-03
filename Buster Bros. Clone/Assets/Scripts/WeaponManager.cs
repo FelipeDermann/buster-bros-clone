@@ -18,12 +18,10 @@ public class WeaponManager : MonoBehaviour
     private ObjectPool<Projectile> shotPool;
     private ObjectPool<Projectile> arrowPool;
     private ObjectPool<Projectile> plugPool;
-    private ObjectPool<WireHitbox> hitboxPool;
 
     [SerializeField] private Projectile _shotPrefab;
     [SerializeField] private Projectile _arrowPrefab;
     [SerializeField] private Projectile _plugPrefab;
-    [SerializeField] private WireHitbox _hitboxPrefab;
     
     private void Awake()
     {
@@ -82,21 +80,6 @@ public class WeaponManager : MonoBehaviour
         {
                     
         }, true, 20);
-        
-        hitboxPool = new ObjectPool<WireHitbox>(() =>
-        {
-            return Instantiate(_hitboxPrefab, transform, true);
-        }, hitbox =>
-        {
-            hitbox.gameObject.SetActive(true);
-        }, hitbox =>
-        {
-            Debug.Log("HITBOX RETURNED TO POOL");
-            hitbox.gameObject.SetActive(false);
-        }, hitbox =>
-        {
-                    
-        }, true, 30);
     }
 
     public void SpawnShot(Transform projectileOriginPos, WeaponType weaponType)
@@ -170,28 +153,5 @@ public class WeaponManager : MonoBehaviour
                 plugPool.Release(projectileToReturn);
                 break;
         }
-    }
-
-    public void SpawnHitbox(Vector3 spawnPos, Projectile parentProjectile)
-    {
-        WireHitbox newWire = hitboxPool.Get();
-
-        newWire.transform.position = spawnPos;
-        newWire.SetParentProjectile(parentProjectile);
-    }
-    
-    public WireHitbox SpawnHitboxWithReference(Vector3 spawnPos, Projectile parentProjectile)
-    {
-        WireHitbox newWire = hitboxPool.Get();
-
-        newWire.transform.position = spawnPos;
-        newWire.SetParentProjectile(parentProjectile);
-
-        return newWire;
-    }
-
-    public void ReturnHitbox(WireHitbox wire)
-    {
-        hitboxPool.Release(wire);
     }
 }
